@@ -7,10 +7,11 @@
   {
 
     <foreignObject class="graphml-link" x="@X.ToInvariantString()" y="@Y.ToInvariantString()">
-        <div style="font-size:16px;width:140px" class="link-label">
+        <div style="font-size:16px;width:140px" class="link-label" >
         <EditForm Model="Label">
-            <label>@Label.Content</label>
-            <InputNumber @bind-Value="Label.EdgeDistance" style="width:50px"></InputNumber>
+            <!--<label>@Label.Content</label>-->
+            <InputNumber  class="form-group" @bind-Value="Label.EdgeDistance" style="width:50px;pointer-events: fill;"  ></InputNumber>
+                       <p>@Label.EdgeDistance</p>
         </EditForm> 
         </div>
     </foreignObject>
@@ -18,6 +19,7 @@
 }
 
 @code {
+    private void OnMouseDown(MouseEventArgs e) => Console.WriteLine(e);
 
   [Parameter]
   public DiagramLinkLabel Label { get; set; }
