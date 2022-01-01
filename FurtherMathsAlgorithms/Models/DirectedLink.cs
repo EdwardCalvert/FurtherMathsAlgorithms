@@ -1,13 +1,15 @@
+using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Models;
 
 namespace FurtherMathsAlgorithms.Models
 {
-  public sealed class DiagramLink : LinkModel
+  public sealed class DirectedLink : LinkModel
   {
-    public DiagramLink(PortModel sourcePort, PortModel? targetPort = null) :
+    public DirectedLink(PortModel sourcePort, PortModel? targetPort = null) :
       base(sourcePort, targetPort)
     {
       Labels.Add(new DiagramLinkLabel(this, Name));
+        TargetMarker = LinkMarker.NewArrow(20, 10);
     }
 
         public string Name { get; set; }

@@ -30,7 +30,7 @@ or it will not be rendered.
              <h3>Toolbox</h3>
             <div class="col-6">
                 <div class="text-center" draggable="true" @ondragstart="() => OnDragStart(1)">
-                    <img class="d-block m-auto" src="_content/SharedDemo/img/BotAnswerNodeWidget.png" />
+                    <img class="d-block m-auto" src="/AddNode.jpg" />
                     <span>Node</span>
                 </div>
             </div>
@@ -59,7 +59,9 @@ or it will not be rendered.
                 AllowPanning = false,
                 Links = new DiagramLinkOptions
                 {
-                    //DefaultLinkComponent = typeof(DiagramLinkLabelWidget),
+                    //DefaultLinkComponent = typeof(DirectedLinkWidget),
+                    DefaultPathGenerator = PathGenerators.Straight,
+                    DefaultRouter = Blazor.Diagrams.Core.Routers.Normal,
                 },
                 Zoom = new DiagramZoomOptions
                 {
@@ -69,13 +71,10 @@ or it will not be rendered.
     }
     };
         _diagram = new Diagram(options);
-
         // connect node/link to renderer
+        //_diagram.RegisterModelComponent<DirectedLink, DirectedLinkWidget>();
         _diagram.RegisterModelComponent<DiagramNode, DiagramNodeWidget>();
         _diagram.RegisterModelComponent<DiagramLinkLabel, DiagramLinkLabelWidget>();
-        _diagram.RegisterModelComponent<NodeModel, DiagramLinkLabelWidget>();
-        //_diagram.RegisterBehavior<Link
-
         Setup();
     }
 
@@ -87,41 +86,36 @@ or it will not be rendered.
         _diagram.Nodes.Add(new[] { node1, node2, node3 });
 
 
-
-        // use portless links so connection points move around when we move node
-        var link = new DiagramLink( node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left))
-            {
-                Router = Blazor.Diagrams.Core.Routers.Normal,
-                PathGenerator = PathGenerators.Straight // Smooth results in weird looking links
-            };
-        link.TargetMarker = LinkMarker.NewArrow(20, 10);
+        var link = new DirectedLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
+        //link.TargetMarker = LinkMarker.NewArrow(20, 10);
         _diagram.Links.Add(link);
-  }
-  private DiagramNode NewNode(string name,Point p)
-{
-    var node = new DiagramNode(name,p);
-    node.AddPort(PortAlignment.Bottom);
-    node.AddPort(PortAlignment.Top);
-    node.AddPort(PortAlignment.Left);
-    node.AddPort(PortAlignment.Right);
-    return node;
-}
+    }
 
- private void OnDragStart(int key)
-        {
-            // Can also use transferData, but this is probably "faster"
-            _draggedType = key;
-        }
+    private DiagramNode NewNode(string name,Point p)
+    {
+        var node = new DiagramNode(name,p);
+        node.AddPort(PortAlignment.Bottom);
+        node.AddPort(PortAlignment.Top);
+        node.AddPort(PortAlignment.Left);
+        node.AddPort(PortAlignment.Right);
+        return node;
+    }
 
-        private void OnDrop(DragEventArgs e)
-        {
-            if (_draggedType == null) // Unkown item
-                return;
+    private void OnDragStart(int key)
+    {
+        // Can also use transferData, but this is probably "faster"
+        _draggedType = key;
+    }
 
-            var position = _diagram.GetRelativeMousePoint(e.ClientX, e.ClientY);
-            var node = _draggedType == 0 ? new NodeModel(position) : NewNode("anotherNode",position);
-            _diagram.Nodes.Add(node);
-            _draggedType = null;
-        }
+    private void OnDrop(DragEventArgs e)
+    {
+        if (_draggedType == null) // Unkown item
+            return;
+
+        var position = _diagram.GetRelativeMousePoint(e.ClientX - 100, e.ClientY -40); //Centre mouse
+        var node = _draggedType == 0 ? new NodeModel(position) : NewNode("anotherNode",position);
+        _diagram.Nodes.Add(node);
+        _draggedType = null;
+    }
 
 }
