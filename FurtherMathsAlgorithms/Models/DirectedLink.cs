@@ -11,7 +11,6 @@ namespace FurtherMathsAlgorithms.Models
       Labels.Add(new DiagramLinkLabel(this, Name));
         TargetMarker = LinkMarker.NewArrow(20, 10);
     }
-
         public string Name { get; set; }
   }
 }
