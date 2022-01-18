@@ -1,10 +1,11 @@
 ﻿@page "/"
-@namespace FurtherMathsAlgorithms.Pages
+@namespace ServerSideAlgorithms.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";
 }
 
-  <component type="typeof(App)" render-mode="ServerPrerendered" />
-
+ <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
 

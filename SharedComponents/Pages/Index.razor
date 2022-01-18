@@ -1,0 +1,118 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+
+@using Blazor.Diagrams.Core
+@using Blazor.Diagrams.Core.Geometry
+@using Blazor.Diagrams.Core.Models
+@using Blazor.Diagrams.Components
+<h1>Hello, World of Custom Nodes and Links!</h1>
+<!--
+Parent of DiagramCanvas has to have a fixed width/height
+or it will not be rendered.
+
+100vw = 100% viewport width
+100vh = 100% viewport height
+-->
+<div style="width:80vw; height: 90vh">
+
+<div class="row h-100">
+    <div class="col-2">
+        <div class="row h-100 p-4 no-gutters" style="background: #eee;">
+             <h3>Toolbox</h3>
+            <div class="col-6">
+                <div class="text-center" draggable="true" @ondragstart="() => OnDragStart(1)">
+                    <img class="d-block m-auto" src="/AddNode.jpg" />
+                    <span>Node</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-8" ondragover="event.preventDefault();" @ondragover:preventDefault @ondrop="OnDrop">
+        <CascadingValue Value="_diagram">
+            <DiagramCanvas></DiagramCanvas>
+        </CascadingValue>
+    </div>
+</div>
+</div>
+
+@code {
+    private Diagram _diagram { get; set; }
+    private int? _draggedType;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var options = new DiagramOptions
+        {
+            DeleteKey = "Delete", // What key deletes the selected nodes/links
+            DefaultNodeComponent = null, // Default component for nodes
+            AllowMultiSelection = true, // Whether to allow multi selection using CTRL
+            AllowPanning = false,
+            Links = new DiagramLinkOptions
+            {
+                DefaultPathGenerator = PathGenerators.Straight,
+                DefaultRouter = Blazor.Diagrams.Core.Routers.Normal,
+            },
+            Zoom = new DiagramZoomOptions
+            {
+                Minimum = 0.5, // Minimum zoom value
+                Inverse = false, // Whether to inverse the direction of the zoom when using the wheel
+                Enabled = false,
+            }
+        };
+        _diagram = new Diagram(options);
+
+        if(true){
+        //Set default link as DirectedLink
+        _diagram.Options.Links.Factory = ( diagram, port ) => new DirectedLink( port );
+        }
+        
+
+        // connect node/link to renderer
+        _diagram.RegisterModelComponent<DiagramNode, DiagramNodeWidget>();
+        _diagram.RegisterModelComponent<DiagramLinkLabel, DiagramLinkLabelWidget>();
+        Setup();
+    }
+
+    private void Setup()
+    {
+        var node1 =  NewNode("Node 0", new Point( 50, 50));
+        var node2 = NewNode("Node 1",new Point( 300, 300));
+        var node3 = NewNode("Node 2",new Point(300, 50));
+        _diagram.Nodes.Add(new[] { node1, node2, node3 });
+
+        var link = new DirectedLink(node1.GetPort(PortAlignment.Right), node2.GetPort(PortAlignment.Left));
+        _diagram.Links.Add(link);
+    }
+
+    private DiagramNode NewNode(string name,Point p)
+    {
+        var node = new DiagramNode(name,p);
+        node.AddPort(PortAlignment.Bottom);
+        node.AddPort(PortAlignment.Top);
+        node.AddPort(PortAlignment.Left);
+        node.AddPort(PortAlignment.Right);
+        return node;
+    }
+
+    private void OnDragStart(int key)
+    {
+        // Can also use transferData, but this is probably "faster"
+        _draggedType = key;
+    }
+
+    private void OnDrop(DragEventArgs e)
+    {
+        if (_draggedType == null) // Unkown item
+            return;
+
+        var position = _diagram.GetRelativeMousePoint(e.ClientX - 100, e.ClientY -40); //Centre mouse
+        var node = _draggedType == 0 ? new NodeModel(position) : NewNode("anotherNode",position);
+        _diagram.Nodes.Add(node);
+        _draggedType = null;
+    }
+
+}

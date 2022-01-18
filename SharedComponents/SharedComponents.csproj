@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Pages\BinPacking.razor" />
+    <None Remove="Pages\CriticalPathAnalysis.razor" />
+    <None Remove="Pages\Dijkstras.razor" />
+    <None Remove="Pages\Index.razor" />
+    <None Remove="Pages\TestDiagram.razor" />
+    <None Remove="Widgets\DiagramLinkLabelWidget.razor" />
+    <None Remove="Widgets\DiagramNodeWidget.razor" />
+    <None Remove="_Imports.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\BinPacking.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Pages\CriticalPathAnalysis.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Pages\Dijkstras.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Pages\Index.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Pages\TestDiagram.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Widgets\DiagramLinkLabelWidget.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="Widgets\DiagramNodeWidget.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="_Imports.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Z.Blazor.Diagrams" Version="2.1.6" />
+    <PackageReference Include="Z.Blazor.Diagrams.Core" Version="2.1.6" />
+  </ItemGroup>
+
+</Project>

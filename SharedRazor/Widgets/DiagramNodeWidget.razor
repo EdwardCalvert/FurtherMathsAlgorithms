@@ -1,0 +1,25 @@
+@using Blazor.Diagrams.Components.Renderers
+
+<div class="default-node @(Node.Selected ? " selected" : "")" style="width:200px;">
+    <div class="card" style="width: 250px;">
+        <div class="card-body">
+            <div class="form-group">
+                <input type="text" class="form-control"
+                       @bind-value="Node.Name"
+                       placeholder="Answer"
+                       @onmousedown:stopPropagation
+                       @onmouseup:stopPropagation
+                       @onmousemove:stopPropagation />
+            </div>
+        </div>
+    </div>
+    @foreach (var port in Node.Ports)
+    {
+        <PortRenderer Port="port" Class="default"></PortRenderer>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public DiagramNode Node { get; set; }
+}
